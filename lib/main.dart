@@ -1,33 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatefulWidget{
+class MyApp extends StatefulWidget {
   @override
-  _MyAppState createState() => _MyAppState();
+  State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp>{
+class _MyAppState extends State<MyApp> {
   TextEditingController controller = TextEditingController();
-    int hasilk=0, hasilr=0, input=0; 
+  double _inputUser = 0;
+  double _kelvin = 0;
+  double _reamor = 0;
 
     kelvin(){
       setState(() {
-        input = int.parse(controller.text);
-        hasilk = input + 273;
+        _inputUser = double.parse(controller.text);
+        _kelvin = _inputUser + 273;
       });
     }
 
     reamor(){
       setState(() {
-        input = int.parse(controller.text);
-        hasilr = input * 4 ~/ 5;
+        _inputUser = double.parse(controller.text);
+        _reamor = _inputUser * 4 / 5;
       });
     }
 
- @override
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
@@ -43,43 +46,13 @@ class _MyAppState extends State<MyApp>{
           margin: EdgeInsets.all(8),
           child: Column(
             children: [
-              TextFormField(
-                controller: controller,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: "Masukkan Suhu Dalam Celcius",
-                ),
-              ), 
+              Input(controller: controller), 
 
               SizedBox(
                 height: 150
               ),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Container(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text("Suhu dalam Kelvin"),
-                        Text("$hasilk", style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500), 
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text("Suhu dalam Reamor"),
-                        Text("$hasilr", style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500) 
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+              Result(kelvin: _kelvin, reamor: _reamor),
 
               SizedBox(
                 height: 220
@@ -102,6 +75,66 @@ class _MyAppState extends State<MyApp>{
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class Result extends StatelessWidget {
+  const Result({
+    Key? key,
+    required double kelvin,
+    required double reamor,
+  }) : _kelvin = kelvin, _reamor = reamor, super(key: key);
+
+  final double _kelvin;
+  final double _reamor;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text("Suhu dalam Kelvin"),
+              Text("$_kelvin", style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500), 
+              ),
+            ],
+          ),
+        ),
+        Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text("Suhu dalam Reamor"),
+              Text("$_reamor", style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500) 
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class Input extends StatelessWidget {
+  const Input({
+    Key? key,
+    required this.controller,
+  }) : super(key: key);
+
+  final TextEditingController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      keyboardType: TextInputType.number,
+      decoration: InputDecoration(
+        labelText: "Masukkan Suhu Dalam Celcius",
       ),
     );
   }
